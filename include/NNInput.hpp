@@ -16,12 +16,14 @@ public:
 
     Tensor backward(const Tensor & input);
 
+    void loadMNISTData();
+
 private:
     std::string mnist_images_;
     std::string mnist_labels_;
     int number_of_images_;
     int number_of_labels_;
     std::vector<std::tuple<Eigen::MatrixXf, int>>samples_;
-    void loadMNISTData();
+    int iterator_ = 0;
 };
 #endif
