@@ -19,13 +19,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
+#include <assert.h>
+#include <Eigen/Dense>
+#include <string>
+#include <iostream>
+
+#include "../include/io.hpp"
 
 int width, height;
 png_byte color_type;
 png_byte bit_depth;
 png_bytep *row_pointers;
 
-void read_png_file(char *filename) {
+
+void read_png_file(const char *filename, int & width, int & height, int & depth) {
   FILE *fp = fopen(filename, "rb");
 
   png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -45,18 +52,23 @@ void read_png_file(char *filename) {
   color_type = png_get_color_type(png, info);
   bit_depth  = png_get_bit_depth(png, info);
 
+  depth = 3;
   // Read any color_type into 8bit depth, RGBA format.
   // See http://www.libpng.org/pub/png/libpng-manual.txt
 
   if(bit_depth == 16)
     png_set_strip_16(png);
 
-  if(color_type == PNG_COLOR_TYPE_PALETTE)
+  if(color_type == PNG_COLOR_TYPE_PALETTE) {
+    depth = 3;
     png_set_palette_to_rgb(png);
+  }
 
   // PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
-  if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+  if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8) {
+    depth = 1;
     png_set_expand_gray_1_2_4_to_8(png);
+  }
 
   if(png_get_valid(png, info, PNG_INFO_tRNS))
     png_set_tRNS_to_alpha(png);
@@ -82,6 +94,7 @@ void read_png_file(char *filename) {
 
   fclose(fp);
 }
+
 
 void write_png_file(char *filename) {
   int y;
@@ -127,23 +140,33 @@ void write_png_file(char *filename) {
   fclose(fp);
 }
 
-void process_png_file() {
-  for(int y = 0; y < height; y++) {
+template <int depth>
+Tensor<depth> io::matrixFromPng(const std::string & filename, int width, int height) {
+  int png_width, png_height, png_depth;
+  read_png_file(filename.c_str(), png_width, png_height, png_depth);
+
+  assert(width == png_width);
+  assert(height == png_height);
+  assert(depth == png_depth);
+  Tensor<depth> input_image(width, height);
+  for(int y = 0; y < height; ++y) {
     png_bytep row = row_pointers[y];
-    for(int x = 0; x < width; x++) {
+    for(int x = 0; x < width; ++x) {
       png_bytep px = &(row[x * 4]);
-      // Do something awesome for each pixel here...
-      //printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
+      for (int z = 0; z < depth; ++z) {
+        input_image.data[z](y, x) = static_cast<int>(px[z]);
+      }
     }
   }
+  return input_image;
 }
+
 
 int main(int argc, char *argv[]) {
   if(argc != 3) abort();
 
-  read_png_file(argv[1]);
-  process_png_file();
-  write_png_file(argv[2]);
+  Tensor<3> tensor = io::matrixFromPng<3>(argv[1], 500, 300);
+  std::cout << tensor.data[0](0, 0) << " " << tensor.data[1](0, 0) << " " << tensor.data[2](0, 0) << '\n';
 
   return 0;
 }
