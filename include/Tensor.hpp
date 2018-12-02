@@ -11,7 +11,7 @@ public:
     Tensor(const std::array<int, 3> & input_size);
     std::array<Eigen::MatrixXf, 3> data() const;
     std::array<int, 3> size() const; 
-    void setData(const Eigen::MatrixXf & matrix, int depth);
+    void setData(Eigen::MatrixXf matrix, int depth);
 
 private:
     std::array<Eigen::MatrixXf, 3> data_;
