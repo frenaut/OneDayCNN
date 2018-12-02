@@ -150,14 +150,16 @@ Tensor io::matrixFromPng(const std::string & filename, int width, int height, in
   assert(height == png_height);
   assert(depth == png_depth);
   Tensor input_image(width, height, depth);
-  for(int y = 0; y < height; ++y) {
-    png_bytep row = row_pointers[y];
-    for(int x = 0; x < width; ++x) {
-      png_bytep px = &(row[x * 4]);
-      for (int z = 0; z < depth; ++z) {
-        input_image.data[z](y, x) = static_cast<int>(px[z]);
+  for (int z = 0; z < depth; ++z) {
+    Eigen::MatrixXf img_at_z(height, width);  
+    for(int y = 0; y < height; ++y) {
+      png_bytep row = row_pointers[y];
+      for(int x = 0; x < width; ++x) {
+        png_bytep px = &(row[x * 4]);
+        img_at_z(y, x) = static_cast<float>(px[z]);
       }
     }
+    input_image.setData(img_at_z, z);
   }
   return input_image;
 }
@@ -166,8 +168,8 @@ Tensor io::matrixFromPng(const std::string & filename, int width, int height, in
 int main(int argc, char *argv[]) {
   if(argc != 3) abort();
 
-  Tensor tensor = io::matrixFromPng(argv[1], 500, 300, 3);
-  std::cout << tensor.data[0](0, 0) << " " << tensor.data[1](0, 0) << " " << tensor.data[2](0, 0) << '\n';
+  Tensor tensor = io::matrixFromPng(argv[1], 1920, 1080, 3);
+  std::cout << tensor.data()[0](0, 0) << " " << tensor.data()[1](0, 0) << " " << tensor.data()[2](0, 0) << '\n';
 
   NNInput input = NNInput("/Users/Brinck/Work/OneDayCNN/train-images-idx3-ubyte", "/Users/Brinck/Work/OneDayCNN/train-labels-idx1-ubyte");
   input.forward();
