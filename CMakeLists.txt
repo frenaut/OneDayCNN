@@ -3,7 +3,8 @@ project(one_day_cnn)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
+find_package(PNG REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR} ${PNG_INCLUDE_DIR})
 
 file(GLOB_RECURSE project_SOURCES "src/*.cpp")
 file(GLOB_RECURSE project_HEADERS "include/*.hpp")
@@ -17,6 +18,4 @@ list(REMOVE_DUPLICATES project_INCLUDE_DIRS)
 
 include_directories(${project_INCLUDE_DIRS})
 add_executable (cnn_test ${project_SOURCES})
-
-
-
+target_link_libraries(cnn_test ${PNG_LIBRARY})
