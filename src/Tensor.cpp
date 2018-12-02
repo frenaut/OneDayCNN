@@ -23,7 +23,7 @@ std::array<int, 3> Tensor::size() const {
   return std::array<int, 3> {{width_, height_, depth_}};
 }
 
-void Tensor::setData(const Eigen::MatrixXf & matrix, int depth){
+void Tensor::setData(Eigen::MatrixXf matrix, int depth){
   assert(depth_ <= 3);
   data_[depth] = matrix;
 }
