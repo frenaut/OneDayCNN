@@ -168,10 +168,7 @@ Tensor io::matrixFromPng(const std::string & filename, int width, int height, in
 int main(int argc, char *argv[]) {
   if(argc != 3) abort();
 
-  Tensor tensor = io::matrixFromPng(argv[1], 1920, 1080, 3);
-  std::cout << tensor.data()[0](0, 0) << " " << tensor.data()[1](0, 0) << " " << tensor.data()[2](0, 0) << '\n';
-
   NNInput input = NNInput("/Users/Brinck/Work/OneDayCNN/train-images-idx3-ubyte", "/Users/Brinck/Work/OneDayCNN/train-labels-idx1-ubyte");
-  input.forward();
+  input.loadMNISTData();
   return 0;
 }
