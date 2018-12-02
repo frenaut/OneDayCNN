@@ -7,6 +7,7 @@
 class Tensor {
 public:
     Tensor(int width, int height, int depth);
+    Tensor(Eigen::MatrixXf matrix);
     Tensor(const std::array<int, 3> & input_size);
     std::array<Eigen::MatrixXf, 3> data() const;
     std::array<int, 3> size() const; 

@@ -9,6 +9,11 @@ Tensor::Tensor(int width, int height, int depth) : width_(width), height_(height
 
 Tensor::Tensor(const std::array<int, 3> & input_size) : Tensor(input_size[0], input_size[1], input_size[2]){}
 
+Tensor::Tensor(Eigen::MatrixXf matrix) {
+    width_ = matrix.cols();
+    height_ = matrix.rows();
+    data_[0] = matrix;
+};
 
 std::array<Eigen::MatrixXf, 3> Tensor::data() const {
   return data_; 
