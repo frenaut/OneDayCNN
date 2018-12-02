@@ -25,6 +25,7 @@
 #include <iostream>
 
 #include "../include/io.hpp"
+#include "../include/Tensor.hpp"
 
 int width, height;
 png_byte color_type;
@@ -140,15 +141,15 @@ void write_png_file(char *filename) {
   fclose(fp);
 }
 
-template <int depth>
-Tensor<depth> io::matrixFromPng(const std::string & filename, int width, int height) {
+
+Tensor io::matrixFromPng(const std::string & filename, int width, int height, int depth) {
   int png_width, png_height, png_depth;
   read_png_file(filename.c_str(), png_width, png_height, png_depth);
 
   assert(width == png_width);
   assert(height == png_height);
   assert(depth == png_depth);
-  Tensor<depth> input_image(width, height);
+  Tensor input_image(width, height, depth);
   for(int y = 0; y < height; ++y) {
     png_bytep row = row_pointers[y];
     for(int x = 0; x < width; ++x) {
@@ -165,7 +166,7 @@ Tensor<depth> io::matrixFromPng(const std::string & filename, int width, int hei
 int main(int argc, char *argv[]) {
   if(argc != 3) abort();
 
-  Tensor<3> tensor = io::matrixFromPng<3>(argv[1], 500, 300);
+  Tensor tensor = io::matrixFromPng(argv[1], 500, 300, 3);
   std::cout << tensor.data[0](0, 0) << " " << tensor.data[1](0, 0) << " " << tensor.data[2](0, 0) << '\n';
 
   return 0;
