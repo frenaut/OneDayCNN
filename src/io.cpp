@@ -26,7 +26,7 @@
 
 #include "../include/io.hpp"
 #include "../include/Tensor.hpp"
-
+#include "../include/NNInput.hpp"
 int width, height;
 png_byte color_type;
 png_byte bit_depth;
@@ -169,5 +169,7 @@ int main(int argc, char *argv[]) {
   Tensor tensor = io::matrixFromPng(argv[1], 500, 300, 3);
   std::cout << tensor.data[0](0, 0) << " " << tensor.data[1](0, 0) << " " << tensor.data[2](0, 0) << '\n';
 
+  NNInput input = NNInput("/Users/Brinck/Work/OneDayCNN/train-images-idx3-ubyte", "/Users/Brinck/Work/OneDayCNN/train-labels-idx1-ubyte");
+  input.forward();
   return 0;
 }
