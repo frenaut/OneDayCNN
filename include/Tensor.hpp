@@ -21,4 +21,8 @@ private:
     int height_;
     int depth_;
 };
+// overload stream operator
+std::ostream& operator<<(std::ostream& os, const Tensor& tensor);
+
 #endif
+
