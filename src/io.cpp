@@ -27,6 +27,9 @@
 #include "../include/lodepng.h"
 #include "../include/Tensor.hpp"
 #include "../include/NNInput.hpp"
+#include "../include/NNFC.hpp"
+#include "../include/NNetwork.hpp"
+
 
 int io::writeImage(const std::string & filename, const Tensor & data) {
   std::vector<unsigned char> image;
@@ -76,13 +79,17 @@ Tensor io::readImage(const std::string & filename, const unsigned int depth) {
 };
 
 int main(int argc, char *argv[]) {
-  NNInput input = NNInput("/Users/Brinck/Work/OneDayCNN/train-images-idx3-ubyte", "/Users/Brinck/Work/OneDayCNN/train-labels-idx1-ubyte");
-  input.loadMNISTData();
-  int index = std::atoi(argv[1]);
 
-  std::tuple<Eigen::MatrixXf, int> sample = input.getSample(index);
-  Tensor first_sample(std::get<0>(sample));
-  std::cout << "Sample size tensor " << first_sample.size()[0] << " " << first_sample.size()[1] << " " << first_sample.size()[2] << " label " << std::get<1>(sample) << std::endl;
-  io::writeImage("out" + std::to_string(index) + ".png", first_sample);
+  std::shared_ptr<NNInput> input(new NNInput("/Users/Brinck/Work/OneDayCNN/train-images-idx3-ubyte", "/Users/Brinck/Work/OneDayCNN/train-labels-idx1-ubyte"));
+  input->loadMNISTData();
+  
+  std::shared_ptr<NNFC> output(new NNFC(50));
+  std::shared_ptr<NNFC> output_2(new NNFC(10));
+  std::cout << " output defined" << std::endl;
+  std::vector<std::shared_ptr<NNBase>> layers = {input, output, output_2};
+  NNetwork network(layers);
+  std::cout << " network defined" << std::endl;
+  std::cout << network.forward() << std::endl;
+
   return 0;
 }

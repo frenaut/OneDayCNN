@@ -14,6 +14,8 @@ public:
     std::vector<Eigen::MatrixXf> data() const;
     std::array<int, 3> size() const; 
     void setData(Eigen::MatrixXf matrix, int depth);
+    void setDepth(const int d);
+    Tensor& operator=(const Tensor& other); // copy assignment
 
 private:
     std::vector<Eigen::MatrixXf> data_;

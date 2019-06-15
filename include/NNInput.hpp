@@ -30,4 +30,6 @@ private:
     std::vector<std::tuple<Eigen::MatrixXf, int>>samples_;
     int iterator_ = 0;
 };
+
+std::ostream& operator<<(std::ostream& os, const NNInput& input);
 #endif

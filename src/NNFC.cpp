@@ -6,6 +6,8 @@
 
 NNFC::NNFC(int output_depth) : output_depth_(output_depth) {
   initialized_ = false;
+  weights_.setDepth(output_depth_);
+  biases_.setDepth(output_depth_);
 }
 
 Tensor NNFC::forward(const Tensor & input) {
@@ -21,9 +23,9 @@ Tensor NNFC::forward(const Tensor & input) {
     // initialize weights and biases tensor to match input tensor size and output depth
     Eigen::MatrixXf input_mat(input_size[1], input_size[0]); // height, then width
     for (int z = 0; z < output_depth_; ++z) {
-      weights_.setData(input_mat.setRandom(), output_depth_);
+      weights_.setData(input_mat.setRandom(), z);
       Eigen::MatrixXf simple_float(1, 1); 
-      biases_.setData(simple_float.setRandom(), output_depth_);
+      biases_.setData(simple_float.setRandom(), z);
     }
     initialized_ = true;
   }

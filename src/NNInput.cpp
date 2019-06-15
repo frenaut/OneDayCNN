@@ -8,7 +8,7 @@ Tensor NNInput::forward() {
     if (!samples_.size()) throw std::runtime_error("You must load a data set before calling forward on the Input layer");
     if (iterator_ >= samples_.size()) iterator_ = 0;
 
-    auto image = std::get<0>(samples_[iterator_]);
+    auto image = std::get<0>(samples_[iterator_++]);
     return Tensor(image);
 }
 

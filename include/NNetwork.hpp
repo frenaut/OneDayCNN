@@ -9,14 +9,15 @@
 class NNetwork{
   public:
    // constructor taking vector of NNBase layers
-   NNetwork(std::vector<NNBase> network);
+   NNetwork(std::vector<std::shared_ptr<NNBase>> network);
+
    // forward pass
    Tensor forward();
    // backward pass
    Tensor backward(){};
 
   private:
-    std::vector<NNBase> network_;
+    std::vector<std::shared_ptr<NNBase>> network_;
 };
 
 #endif // NNetwork_HPP
