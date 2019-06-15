@@ -13,6 +13,7 @@ Tensor::Tensor(Eigen::MatrixXf matrix) {
     data_.resize(1);
     width_ = matrix.cols();
     height_ = matrix.rows();
+    depth_ = 1;
     data_[0] = matrix;
 };
 
@@ -27,22 +28,6 @@ std::array<int, 3> Tensor::size() const {
 void Tensor::setData(Eigen::MatrixXf matrix, int depth){
   assert(depth_ < data_.size());
   data_[depth] = matrix;
-}
-
-// assume the object holds reusable storage, such as a heap-allocated buffer mArray
-Tensor& operator=(const Tensor& other) // copy assignment
-{
-    if (this != &other) { // self-assignment check expected
-        if (other.size != size) {         // storage cannot be reused
-            delete[] mArray;              // destroy storage in this
-            size = 0;
-            mArray = nullptr;             // preserve invariants in case next line throws
-            mArray = new int[other.size]; // create storage in this
-            size = other.size;
-        } 
-        std::copy(other.mArray, other.mArray + other.size, mArray);
-    }
-    return *this;
 }
 
 std::ostream& operator<<(std::ostream& os, const Tensor& tensor){
