@@ -2,6 +2,7 @@
 #define NNetwork_HPP
 
 #include "vector"
+#include <memory>
 
 #include "Tensor.hpp"
 #include "NNBase.hpp"
