@@ -4,7 +4,7 @@
 
 class NNBase {
 public:
-    virtual Tensor forward(const Tensor & input) = 0;
-    virtual Tensor backward(const Tensor & input) = 0;
+    virtual Tensor forward(const Tensor & input){};
+    virtual Tensor backward(const Tensor & input){};
 };
 #endif

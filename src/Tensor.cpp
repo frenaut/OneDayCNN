@@ -1,7 +1,7 @@
 #include "../include/Tensor.hpp"
 
 Tensor::Tensor(int width, int height, int depth) : width_(width), height_(height), depth_(depth) {
-  assert(depth_ <= 3);
+  data_.resize(depth);
   for (int d = 0; d < depth; ++d) {
       data_[d] = Eigen::MatrixXf(height, width);
   }
@@ -16,7 +16,7 @@ Tensor::Tensor(Eigen::MatrixXf matrix) {
     data_[0] = matrix;
 };
 
-std::array<Eigen::MatrixXf, 3> Tensor::data() const {
+std::vector<Eigen::MatrixXf> Tensor::data() const {
   return data_; 
 }
 
@@ -25,6 +25,6 @@ std::array<int, 3> Tensor::size() const {
 }
 
 void Tensor::setData(Eigen::MatrixXf matrix, int depth){
-  assert(depth_ <= 3);
+  assert(depth_ < data_.size());
   data_[depth] = matrix;
 }
