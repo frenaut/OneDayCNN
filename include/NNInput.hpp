@@ -16,6 +16,10 @@ public:
 
     Tensor backward(const Tensor & input);
 
+    std::tuple<Eigen::MatrixXf, int> getSample(const int idx) const {
+        return samples_.at(idx);
+    }
+
     void loadMNISTData();
 
 private:

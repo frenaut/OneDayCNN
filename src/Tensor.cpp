@@ -12,6 +12,7 @@ Tensor::Tensor(const std::array<int, 3> & input_size) : Tensor(input_size[0], in
 Tensor::Tensor(Eigen::MatrixXf matrix) {
     width_ = matrix.cols();
     height_ = matrix.rows();
+    depth_ = 1;
     data_[0] = matrix;
 };
 
