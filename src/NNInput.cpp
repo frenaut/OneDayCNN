@@ -61,9 +61,11 @@ void NNInput::loadMNISTData() {
         Eigen::MatrixXf mnist_image(n_rows, n_cols);
         for (int y = 0; y < n_rows; ++y) {
             for (int x = 0; x < n_cols; ++x) {
-                mnist_image(y, x) = static_cast<float>(image[y * x]);
+                mnist_image(y, x) = static_cast<float>(image[y * n_cols + x]);
             }
         }
         samples_.emplace_back(mnist_image, label);
     }
+
+    std::cout << "Loaded " << samples_.size() << " MNIST images of size " << n_cols << "x" << n_rows << std::endl; 
 }
